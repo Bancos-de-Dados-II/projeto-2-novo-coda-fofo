@@ -37,6 +37,7 @@ schemaDenuncia.index(
     },
   }
 );
+schemaDenuncia.index({ localizacao: "2dsphere" });
 
 const DenunciaModel = mongoose.model("Denuncia", schemaDenuncia);
 
