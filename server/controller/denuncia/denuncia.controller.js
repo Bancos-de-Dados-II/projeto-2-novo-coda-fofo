@@ -1,5 +1,5 @@
 import { denunciaUseCase } from "../../use-case/denuncia/denuncia.use-case.js";
-import { CREATED } from "../../utils/helpers/codigosRequisicao.js";
+import { CREATED, SUCCESS } from "../../utils/helpers/codigosRequisicao.js";
 
 class DenunciaController {
   constructor(denunciaUseCase) {
@@ -8,14 +8,11 @@ class DenunciaController {
 
   criarDenuncia = async (req, res, next) => {
     try {
-      const { titulo, descricao, categoria, localizacao } = req.body;
+      const denunciaParaCriar = req.body;
 
-      const denuncia = await this.denunciaUseCase.criarDenuncia({
-        titulo,
-        descricao,
-        categoria,
-        localizacao,
-      });
+      const denuncia = await this.denunciaUseCase.criarDenuncia(
+        denunciaParaCriar
+      );
 
       res.status(CREATED).json(denuncia);
     } catch (error) {
@@ -23,13 +20,48 @@ class DenunciaController {
     }
   };
 
-  buscarDenuncias = async (req, res) => {};
+  buscarDenuncias = async (req, res, next) => {
+    try {
+      const busca = req.query.q;
 
-  buscaTextualDenuncias = async (req, res) => {};
+      const denuncias = await this.denunciaUseCase.buscarDenuncias(busca);
 
-  atualizarDenuncia = async (req, res) => {};
+      res.status(SUCCESS).json(denuncias);
+    } catch (error) {
+      next(error);
+    }
+  };
 
-  deletarDenuncia = async (req, res) => {};
+  atualizarDenuncia = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const denunciaParaAtualizar = req.body;
+
+      const denunciaAtualizada =
+        await this.denunciaUseCase.atualizarUmaDenuncia(
+          id,
+          denunciaParaAtualizar
+        );
+
+      res.status(SUCCESS).json(denunciaAtualizada);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deletarDenuncia = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const denunciaDeletada = await this.denunciaUseCase.deletarUmaDenuncia(
+        id
+      );
+
+      res.status(SUCCESS).json(denunciaDeletada);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 const denunciaController = new DenunciaController(denunciaUseCase);

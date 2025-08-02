@@ -7,9 +7,7 @@ denunciaRotas.post("/", denunciaController.criarDenuncia);
 
 denunciaRotas.get("/", denunciaController.buscarDenuncias);
 
-denunciaRotas.get("/:q", denunciaController.buscaTextualDenuncias);
-
-denunciaRotas.put("/:id", denunciaController.atualizarDenuncia);
+denunciaRotas.patch("/:id", denunciaController.atualizarDenuncia);
 
 denunciaRotas.delete("/:id", denunciaController.deletarDenuncia);
 

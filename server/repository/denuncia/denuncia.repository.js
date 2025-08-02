@@ -17,12 +17,12 @@ class DenunciaRepository {
     return await this.denunciaModel.find({ $text: { $search: busca } });
   };
 
-  atualizarUmaDenuncia = async (id, data) => {
-    return await this.denunciaModel.updateOne({ _id: id }, { $set: data });
+  atualizarUmaDenuncia = async (id, data = {}) => {
+    return await this.denunciaModel.findByIdAndUpdate(id, data, { new: true });
   };
 
-  deletarDenuncia = async (idDenuncia) => {
-    return await this.denunciaModel.deleteOne({ _id: idDenuncia });
+  deletarDenuncia = async (id) => {
+    return await this.denunciaModel.findByIdAndDelete(id);
   };
 }
 
