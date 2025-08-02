@@ -1,15 +1,16 @@
-// import express from "express";
+import express from "express";
+import { denunciaController } from "../../controller/denuncia/denuncia.controller.js";
 
-// const denunciaRotas = express.Router();
+const denunciaRotas = express.Router();
 
-// denunciaRotas.post("/");
+denunciaRotas.post("/", denunciaController.criarDenuncia);
 
-// denunciaRotas.get("/");
+denunciaRotas.get("/", denunciaController.buscarDenuncias);
 
-// denunciaRotas.get("/:q");
+denunciaRotas.get("/:q", denunciaController.buscaTextualDenuncias);
 
-// denunciaRotas.put("/:id");
+denunciaRotas.put("/:id", denunciaController.atualizarDenuncia);
 
-// denunciaRotas.delete("/:id");
+denunciaRotas.delete("/:id", denunciaController.deletarDenuncia);
 
-// export { denunciaRotas };
+export { denunciaRotas };
