@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nova Denúncia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="max-w-4xl mx-auto p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Registrar Denúncia</h1>
+      <a href="mapa.html" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">Ver Mapa</a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-2xl p-6">
+      <form id="denunciaForm" class="space-y-4">
+        <input type="text" id="titulo" placeholder="Título" class="w-full p-3 border rounded-2xl" required />
+        <textarea id="descricao" placeholder="Descrição" class="w-full p-3 border rounded-2xl" required></textarea>
+
+        <select id="categoria" class="w-full p-3 border rounded-2xl" required>
+          <option value="">Selecione a categoria</option>
+          <option value="Infraestrutura">Infraestrutura</option>
+          <option value="Segurança">Segurança</option>
+          <option value="Meio Ambiente">Meio Ambiente</option>
+          <option value="Outros">Outros</option>
+        </select>
+
+        <div class="flex gap-2">
+          <input type="text" id="buscaLocal" placeholder="Buscar localização..." class="flex-1 p-3 border rounded-2xl" />
+          <button type="button" onclick="buscarEndereco()" class="bg-gray-700 text-white px-4 py-2 rounded-2xl hover:bg-gray-800">Buscar</button>
+        </div>
+
+        <p class="text-gray-600 text-sm">Clique no mapa para escolher o local da denúncia</p>
+        <div id="map" class="h-96 rounded-2xl border"></div>
+
+        <input type="hidden" id="latitude" />
+        <input type="hidden" id="longitude" />
+
+        <div class="text-right">
+          <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition">Enviar Denúncia</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let map = L.map('map').setView([-23.55, -46.63], 12); // Centralizado em São Paulo como padrão
+    let marker;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    map.on('click', function (e) {
+      const { lat, lng } = e.latlng;
+      document.getElementById('latitude').value = lat;
+      document.getElementById('longitude').value = lng;
+
+      if (marker) {
+        marker.setLatLng(e.latlng);
+      } else {
+        marker = L.marker(e.latlng).addTo(map);
+      }
+    });
+
+    async function buscarEndereco() {
+      const query = document.getElementById('buscaLocal').value;
+      if (!query) return;
+
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+      const data = await res.json();
+
+      if (data.length > 0) {
+        const { lat, lon } = data[0];
+        const coords = [parseFloat(lat), parseFloat(lon)];
+        map.setView(coords, 17);
+
+        if (marker) {
+          marker.setLatLng(coords);
+        } else {
+          marker = L.marker(coords).addTo(map);
+        }
+
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lon;
+      } else {
+        alert('Endereço não encontrado.');
+      }
+    }
+
+    document.getElementById('denunciaForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const titulo = document.getElementById('titulo').value;
+      const descricao = document.getElementById('descricao').value;
+      const categoria = document.getElementById('categoria').value;
+      const latitude = document.getElementById('latitude').value;
+      const longitude = document.getElementById('longitude').value;
+      if (!latitude || !longitude) {
+        return alert("Selecione uma localização no mapa.");
+      }
+
+      const res = await fetch('http://localhost:3000/denuncias', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ titulo, descricao, categoria, latitude, longitude })
+      });
+
+      if (res.ok) {
+        alert("Denúncia enviada com sucesso!");
+        location.reload();
+      } else {
+        const erro = await res.json();
+        alert("Erro ao enviar denúncia: " + erro.error);
+      }
+    });
+  </script>
+</body>
+</html>
