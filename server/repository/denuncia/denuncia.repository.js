@@ -5,6 +5,10 @@ class DenunciaRepository {
     this.denunciaModel = denunciaModel;
   }
 
+  pegarDenunciaPorId = async (id) => {
+    return await this.denunciaModel.findById(id);
+  };
+
   pegarTodasDenuncias = async () => {
     return await this.denunciaModel.find();
   };

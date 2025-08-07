@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <title>Listagem denuncias</title>
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-7xl mx-auto p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Listagem das denuncias</h1>
+
+        <a
+          href="../index.html"
+          class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition"
+          >Voltar para dashboards</a
+        >
+      </div>
+
+      <div class="bg-white shadow-md rounded-2xl p-6 mt-10">
+        <div class="flex gap-2">
+          <input
+            type="text"
+            id="busca-denuncia"
+            placeholder="Buscar denuncias..."
+            class="flex-1 p-3 border rounded-2xl"
+          />
+          <button
+            type="button"
+            onclick="buscarEndereco()"
+            class="bg-gray-700 text-white px-4 py-2 rounded-2xl hover:bg-gray-800"
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+
+      <form
+        id="editForm"
+        class="bg-white p-4 rounded-2xl shadow space-y-4 hidden"
+      >
+        <h2 class="text-xl font-semibold text-gray-700 mb-2">
+          Editar Denúncia
+        </h2>
+
+        <input type="hidden" id="editId" />
+        <input
+          type="text"
+          id="editTitulo"
+          placeholder="Título"
+          class="w-full p-3 border rounded-2xl"
+          required
+        />
+        <textarea
+          id="editDescricao"
+          placeholder="Descrição"
+          class="w-full p-3 border rounded-2xl"
+          required
+        ></textarea>
+        <select
+          id="editCategoria"
+          class="w-full p-3 border rounded-2xl"
+          required
+        >
+          <option disabled selected>Selecione a categoria</option>
+          <option value="Infraestrutura">Infraestrutura</option>
+          <option value="Segurança">Segurança</option>
+          <option value="Meio Ambiente">Meio Ambiente</option>
+          <option value="Outros">Outros</option>
+        </select>
+        <div class="text-right">
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700"
+          >
+            Salvar Alterações
+          </button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

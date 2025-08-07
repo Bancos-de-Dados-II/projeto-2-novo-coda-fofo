@@ -5,6 +5,8 @@ const denunciaRotas = express.Router();
 
 denunciaRotas.post("/", denunciaController.criarDenuncia);
 
+denunciaRotas.get("/:id", denunciaController.buscarUmaDenuncia);
+
 denunciaRotas.get("/", denunciaController.buscarDenuncias);
 
 denunciaRotas.patch("/:id", denunciaController.atualizarDenuncia);
