@@ -25,6 +25,12 @@ class DenunciaUseCase {
     return denunciaCriada;
   };
 
+  buscarUmaDenuncia = async (id) => {
+    const denuncia = await this.denunciaRepository.pegarDenunciaPorId(id);
+
+    return denuncia;
+  };
+
   _denunciasExistentes = async () => {
     const denuncias = await this.denunciaRepository.pegarTodasDenuncias();
 

@@ -20,6 +20,18 @@ class DenunciaController {
     }
   };
 
+  buscarUmaDenuncia = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+
+      const denuncia = await this.denunciaUseCase.buscarUmaDenuncia(id);
+
+      res.status(SUCCESS).json(denuncia);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   buscarDenuncias = async (req, res, next) => {
     try {
       const busca = req.query.q;
