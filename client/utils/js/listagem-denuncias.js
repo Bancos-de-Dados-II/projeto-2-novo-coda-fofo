@@ -11,29 +11,6 @@ const bounds = L.latLngBounds();
 let markers = [];
 let editMarker;
 
-function initMap() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userLocation = [
-          position.coords.latitude,
-          position.coords.longitude,
-        ];
-        map.setView(userLocation, 12);
-        carregarDenuncias();
-      },
-      () => {
-        map.setView([-23.55, -46.63], 12);
-        carregarDenuncias();
-      }
-    );
-  } else {
-    map.setView([-23.55, -46.63], 12);
-
-    carregarDenuncias();
-  }
-}
-
 // Carrega as denúncias
 async function carregarDenuncias(query = "") {
   markers.forEach((marker) => map.removeLayer(marker));
@@ -263,4 +240,4 @@ document
     }
   });
 
-window.onload = initMap;
+window.onload = () => carregarDenuncias();
