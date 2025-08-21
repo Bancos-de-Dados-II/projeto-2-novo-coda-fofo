@@ -58,12 +58,11 @@ class ResponsavelNeo4jRepository extends Neo4jBaseRepository {
     return resultado.records[0]?.get('r')?.properties;
   }
 
-  async criarRelacionamentoDenunciaResponsavel(denunciaId, responsavelId, tipoRelacionamento = 'ATRIBUIDA_A') {
+  async criarRelacionamentoDenuncia(denunciaId, responsavelId) {
     const query = `
       MATCH (d:Denuncia {id: $denunciaId}), (r:Responsavel {id: $responsavelId})
-      CREATE (d)-[rel:${tipoRelacionamento} {
-        atribuidoEm: datetime()
-      }]->(r)
+      MERGE (d)-[rel:ATRIBUIDA_A]->(r)
+      ON CREATE SET rel.atribuidoEm = datetime()
       RETURN rel, d, r
     `;
 
@@ -94,7 +93,7 @@ class ResponsavelNeo4jRepository extends Neo4jBaseRepository {
     }));
   }
 
-  async buscarResponsavelPorId(responsavelId) {
+  async buscarResponsavelNeo4jPorId(responsavelId) {
     const query = `
       MATCH (r:Responsavel {id: $responsavelId})
       RETURN r
@@ -104,10 +103,9 @@ class ResponsavelNeo4jRepository extends Neo4jBaseRepository {
     return resultado.records[0]?.get('r')?.properties;
   }
 
-  async buscarTodosResponsaveis() {
+  async buscarTodosResponsaveisNeo4j() {
     const query = `
-      MATCH (r:Responsavel)
-      WHERE r.ativo = true
+      MATCH (r:Responsavel {ativo: true})
       RETURN r
       ORDER BY r.nome
     `;
@@ -117,5 +115,4 @@ class ResponsavelNeo4jRepository extends Neo4jBaseRepository {
   }
 }
 
-// Export a classe, não uma instância
 export { ResponsavelNeo4jRepository };
